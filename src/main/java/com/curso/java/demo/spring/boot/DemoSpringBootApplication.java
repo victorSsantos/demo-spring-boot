@@ -1,4 +1,4 @@
-package com.curso.java.demo_spring_boot;
+package com.curso.java.demo.spring.boot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
