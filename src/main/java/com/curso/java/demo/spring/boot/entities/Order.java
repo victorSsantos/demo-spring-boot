@@ -3,12 +3,12 @@ package com.curso.java.demo.spring.boot.entities;
 import com.curso.java.demo.spring.boot.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import org.hibernate.annotations.ManyToAny;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -30,7 +30,10 @@ public class Order implements Serializable {
     private User client;
 
     @OneToMany(mappedBy = "id.order")
-    private Set<OrderItem> items = new HashSet<>();
+    private final Set<OrderItem> items = new HashSet<>();
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
 
     public Order() {
     }
@@ -77,6 +80,19 @@ public class Order implements Serializable {
 
     public Set<OrderItem> getItems() {
         return items;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public Double getTotal() {
+        Optional<Double> sum = items.stream().map(OrderItem::getSubTotal).reduce(Double::sum);
+        return sum.orElse(null);
     }
 
     @Override
